@@ -30,7 +30,7 @@ mot de passe ni les liens du film.
 
 Limites à connaître (site statique, sans serveur) :
 
-- **Choisir des mots de passe non devinables.** Une date (ex. `16052026`) se
+- **Choisir des mots de passe non devinables.** Une date de mariage (8 chiffres) se
   retrouve par essais successifs en peu de temps, même chiffrée. Préférer
   3–4 mots ou une suite d'au moins 10 caractères variés.
 - Les prénoms, dates et photos de couverture restent publics (ils
