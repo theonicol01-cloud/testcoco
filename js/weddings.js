@@ -25,6 +25,6 @@ window.WEDDINGS = [
     names: ["Lena", "Romain"],
     date: "2026-05-16",
     dateLabel: "16 mai 2026",
-    cover: null /* ex: "assets/images/lena-romain.jpg" — null = visuel monogramme */
+    cover: "assets/images/lena-romain.jpg" /* visuel provisoire — remplacer le fichier par une vraie photo (même nom) */
   }
 ];
