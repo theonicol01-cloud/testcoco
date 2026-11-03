@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Outil — Chiffrer un mariage</title>
+<style>
+  :root { --bg:#0a0a08; --surface:#141310; --ivory:#f2ede1; --dim:rgba(242,237,225,.62); --line:rgba(242,237,225,.16); --gold:#c9a35d; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ivory); font:14px/1.5 "Segoe UI", system-ui, sans-serif; padding:40px 16px; }
+  main { max-width:620px; margin:0 auto; }
+  h1 { font-weight:400; font-size:26px; margin:0 0 6px; }
+  p.lead { color:var(--dim); margin:0 0 28px; }
+  label { display:block; font-size:12px; color:var(--dim); margin:16px 0 6px; }
+  input, textarea { width:100%; padding:11px 12px; background:var(--surface); color:var(--ivory); border:1px solid var(--line); border-radius:3px; font:inherit; }
+  textarea { font-family:ui-monospace, Consolas, monospace; font-size:12px; min-height:150px; }
+  button { margin-top:22px; padding:12px 18px; background:var(--gold); color:#17150f; border:none; border-radius:3px; font:inherit; font-weight:600; cursor:pointer; }
+  button:disabled { opacity:.5; cursor:progress; }
+  .err { color:#e0907f; margin-top:12px; min-height:1.5em; }
+  .out { margin-top:28px; display:none; }
+  .out.is-visible { display:block; }
+  code { color:var(--gold); }
+</style>
+</head>
+<body>
+<main>
+  <h1>Chiffrer un mariage</h1>
+  <p class="lead">
+    À utiliser en local. Le mot de passe ne quitte pas cette page et n'est enregistré nulle part :
+    seul le bloc chiffré généré est à coller dans <code>js/vault.js</code>.
+  </p>
+
+  <form id="f" autocomplete="off">
+    <label for="slug">Identifiant du mariage (le <code>slug</code> de js/weddings.js)</label>
+    <input id="slug" required placeholder="lena-romain" pattern="[a-z0-9-]+">
+
+    <label for="pw">Mot de passe des invités</label>
+    <input id="pw" type="password" required minlength="8">
+
+    <label for="pw2">Confirmer le mot de passe</label>
+    <input id="pw2" type="password" required>
+
+    <label for="video">URL du film (streaming) — vide si pas encore en ligne</label>
+    <input id="video" placeholder="https://...">
+
+    <label for="dl">URL de téléchargement — vide si pas encore en ligne</label>
+    <input id="dl" placeholder="https://...">
+
+    <button type="submit" id="go">Générer le bloc chiffré</button>
+    <p class="err" id="err"></p>
+  </form>
+
+  <div class="out" id="out">
+    <label for="result">À coller dans js/vault.js (remplace l'ancien bloc du même mariage) :</label>
+    <textarea id="result" readonly></textarea>
+  </div>
+</main>
+
+<script src="../js/crypto.js"></script>
+<script>
+  const $ = (id) => document.getElementById(id);
+
+  $("f").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    $("err").textContent = "";
+    if ($("pw").value !== $("pw2").value) {
+      $("err").textContent = "Les deux mots de passe ne correspondent pas.";
+      return;
+    }
+    $("go").disabled = true;
+    try {
+      const block = await WeddingCrypto.encrypt(
+        { videoUrl: $("video").value.trim(), downloadUrl: $("dl").value.trim() },
+        $("pw").value.trim()
+      );
+      $("result").value = '  "' + $("slug").value.trim() + '": ' + JSON.stringify(block) + ",";
+      $("out").classList.add("is-visible");
+      $("result").select();
+    } catch (err) {
+      $("err").textContent = "Erreur : " + err.message;
+    } finally {
+      $("go").disabled = false;
+      $("pw").value = $("pw2").value = "";
+    }
+  });
+</script>
+</body>
+</html>

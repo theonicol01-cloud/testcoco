@@ -1,69 +1,62 @@
 /* ================================================================
-   Marine & Clément — Le film du mariage
-   ================================================================
-
-   CONFIGURATION — à modifier lors de l'intégration Cloudflare
-   ------------------------------------------------------------
-   Remplacez simplement les deux valeurs ci-dessous par les URLs
-   Cloudflare R2 / Worker une fois disponibles. Rien d'autre dans
-   ce fichier n'a besoin d'être modifié.
+   PAGE FILM — commune à tous les mariages
+   ----------------------------------------------------------------
+   Le mariage est choisi par ?m=<slug>. Les liens vidéo /
+   téléchargement viennent du contenu déchiffré sur l'accueil
+   (mot de passe), jamais d'un fichier en clair.
 ================================================================ */
 
-const VIDEO_URL = "";     // ex: "https://videos.votredomaine.com/mariage.mp4"
-const DOWNLOAD_URL = "";  // ex: "https://videos.votredomaine.com/mariage-original.mp4"
+const params = new URLSearchParams(window.location.search);
+const SLUG = params.get("m");
+const WEDDING = (window.WEDDINGS || []).find(function (w) { return w.slug === SLUG; });
+const PRIVATE = WEDDING ? window.WeddingCrypto.recall(WEDDING.slug) : null;
 
-/* Mot de passe de démonstration (PROTOTYPE UNIQUEMENT).
-   À terme, la vérification devra se faire côté Cloudflare Worker —
-   ne jamais laisser un mot de passe réel visible dans un fichier JS
-   servi publiquement. */
-const DEMO_PASSWORD = "09052026";
+// Mariage inconnu ou pas encore déverrouillé : retour à l'accueil
+// (qui ouvre directement la fenêtre mot de passe du bon mariage).
+if (!WEDDING) {
+  window.location.replace("index.html");
+} else if (!PRIVATE) {
+  window.location.replace("index.html?m=" + encodeURIComponent(WEDDING.slug));
+}
+
+const VIDEO_URL = (PRIVATE && PRIVATE.videoUrl) || "";
+const DOWNLOAD_URL = (PRIVATE && PRIVATE.downloadUrl) || "";
 
 /* ================================================================
-   PORTE D'ENTRÉE (mot de passe)
+   REMPLISSAGE DE LA PAGE
 ================================================================ */
 
-(function initGate() {
-  const gate = document.getElementById("gate");
+(function fillPage() {
+  if (!WEDDING || !PRIVATE) return;
+
+  const w = WEDDING;
+  const both = w.names[0] + " & " + w.names[1];
+
+  document.title = both + " — Le film du mariage";
+  document.getElementById("heroName1").textContent = w.names[0];
+  document.getElementById("heroName2").textContent = w.names[1];
+
+  const heroDate = document.getElementById("heroDate");
+  heroDate.dateTime = w.date;
+  heroDate.textContent = w.dateLabel;
+
+  const heroImage = document.getElementById("heroImage");
+  if (w.cover) {
+    heroImage.src = w.cover;
+    heroImage.alt = w.names[0] + " et " + w.names[1] + " le jour de leur mariage";
+    heroImage.hidden = false;
+    document.getElementById("video").poster = w.cover;
+  } else {
+    heroImage.remove();
+    document.getElementById("heroMedia").classList.add("hero__media--plain");
+  }
+
+  document.getElementById("footerNames").textContent = both;
+  document.getElementById("footerLine").textContent = w.dateLabel + " — merci d'avoir été là.";
+
   const site = document.getElementById("site");
-  const form = document.getElementById("gateForm");
-  const input = document.getElementById("gatePassword");
-  const error = document.getElementById("gateError");
-
-  const SESSION_KEY = "mc-wedding-unlocked";
-
-  function unlock() {
-    gate.classList.add("is-hidden");
-    site.removeAttribute("aria-hidden");
-    site.classList.add("is-visible");
-    try {
-      sessionStorage.setItem(SESSION_KEY, "1");
-    } catch (e) {
-      /* stockage indisponible : sans conséquence sur le prototype */
-    }
-  }
-
-  // Si déjà déverrouillé pendant cette session, on saute directement.
-  try {
-    if (sessionStorage.getItem(SESSION_KEY) === "1") {
-      unlock();
-    }
-  } catch (e) {
-    /* ignore */
-  }
-
-  form.addEventListener("submit", function (event) {
-    event.preventDefault();
-    const value = input.value.trim();
-
-    if (value === DEMO_PASSWORD) {
-      error.classList.remove("is-visible");
-      unlock();
-    } else {
-      error.classList.add("is-visible");
-      input.focus();
-      input.select();
-    }
-  });
+  site.removeAttribute("aria-hidden");
+  site.classList.add("is-visible");
 })();
 
 /* ================================================================

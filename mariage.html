@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Le film du mariage</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- Page commune à tous les mariages : le contenu est rempli par
+     js/mariage.js selon ?m=<slug>. Sans déverrouillage préalable
+     (mot de passe saisi sur l'accueil), le visiteur est renvoyé
+     vers l'accueil. -->
+
+<main class="site" id="site" aria-hidden="true">
+
+  <a href="index.html" class="site-back" aria-label="Retour aux mariages">
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+      <path d="M19 12H5M11 6l-6 6 6 6" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    Tous les mariages
+  </a>
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="hero__media" id="heroMedia">
+      <img src="" alt="" class="hero__image" id="heroImage" hidden>
+      <div class="hero__overlay" aria-hidden="true"></div>
+    </div>
+
+    <div class="hero__content">
+      <h1 class="hero__title">
+        <span class="hero__title-line" id="heroName1"></span>
+        <span class="hero__title-amp">&amp;</span>
+        <span class="hero__title-line" id="heroName2"></span>
+      </h1>
+      <time class="hero__date" id="heroDate"></time>
+    </div>
+
+    <button class="hero__scroll" id="scrollCue" aria-label="Découvrir le film">
+      <span class="hero__scroll-line" aria-hidden="true"></span>
+      <span class="hero__scroll-text">Le film</span>
+    </button>
+  </section>
+
+  <!-- FILM -->
+  <section class="film" id="film">
+    <div class="film__intro">
+      <h2 class="film__heading">Voici le film de notre mariage.</h2>
+      <p class="film__subheading">Merci d'avoir partagé cette journée avec nous.</p>
+    </div>
+
+    <div class="film__layout">
+
+      <!-- Lecteur vidéo HTML5 personnalisé -->
+      <div class="player" id="player" data-state="paused">
+        <div class="player__frame">
+          <video
+            id="video"
+            class="player__video"
+            preload="metadata"
+            playsinline
+          >
+            Votre navigateur ne prend pas en charge la lecture vidéo.
+          </video>
+
+          <div class="player__empty" id="playerEmpty">
+            <p>Le film sera ajouté ici.</p>
+            <p class="player__empty-sub">Aperçu de l'interface de lecture</p>
+          </div>
+
+          <button class="player__giant-play" id="giantPlay" aria-label="Lire le film">
+            <svg viewBox="0 0 64 64" width="64" height="64" fill="none">
+              <circle cx="32" cy="32" r="31" stroke="currentColor" stroke-width="1"/>
+              <path d="M26 20L45 32L26 44V20Z" fill="currentColor"/>
+            </svg>
+          </button>
+
+          <div class="player__controls">
+            <button class="player__btn player__play" id="playBtn" aria-label="Lecture / Pause">
+              <svg class="icon-play" viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M7 5.5v13l11-6.5-11-6.5z"/></svg>
+              <svg class="icon-pause" viewBox="0 0 24 24" width="18" height="18" fill="currentColor" hidden><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
+            </button>
+
+            <span class="player__time" id="timeCurrent">0:00</span>
+
+            <div class="player__progress" id="progress" role="slider" aria-label="Progression de la lecture" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" tabindex="0">
+              <div class="player__progress-track">
+                <div class="player__progress-fill" id="progressFill"></div>
+                <div class="player__progress-handle" id="progressHandle"></div>
+              </div>
+            </div>
+
+            <span class="player__time" id="timeDuration">0:00</span>
+
+            <div class="player__volume">
+              <button class="player__btn player__mute" id="muteBtn" aria-label="Couper le son">
+                <svg class="icon-vol-on" viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M4 9v6h4l5 5V4L8 9H4z"/><path d="M16.5 12a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4z"/></svg>
+                <svg class="icon-vol-off" viewBox="0 0 24 24" width="18" height="18" fill="currentColor" hidden><path d="M4 9v6h4l5 5V4L8 9H4z"/><path d="M19 8l-5 5m0-5l5 5" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg>
+              </button>
+              <input type="range" class="player__volume-slider" id="volumeSlider" min="0" max="100" value="100" aria-label="Volume">
+            </div>
+
+            <button class="player__btn player__fullscreen" id="fullscreenBtn" aria-label="Plein écran">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6">
+                <path d="M8 4H4v4M16 4h4v4M8 20H4v-4M16 20h4v-4" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Téléchargement -->
+      <aside class="download">
+        <p class="download__label">Conserver le film</p>
+        <a href="#" class="download__button" id="downloadBtn">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6">
+            <path d="M12 3v13m0 0l-5-5m5 5l5-5M4 20h16" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Télécharger le film
+        </a>
+        <p class="download__quality">Film en qualité originale</p>
+        <p class="download__note" id="downloadNote">Le lien de téléchargement sera activé prochainement.</p>
+      </aside>
+
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <p class="site-footer__names" id="footerNames"></p>
+    <p class="site-footer__line" id="footerLine"></p>
+  </footer>
+
+</main>
+
+<script src="js/weddings.js"></script>
+<script src="js/crypto.js"></script>
+<script src="js/mariage.js"></script>
+</body>
+</html>
