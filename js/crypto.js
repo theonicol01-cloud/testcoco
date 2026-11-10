@@ -62,14 +62,30 @@ window.WeddingCrypto = (function () {
      tant que l'onglet reste ouvert. */
   const PREFIX = "cc-wedding-";
 
+  /* Le déverrouillage mémorisé est lié à la version du bloc chiffré :
+     si le contenu du mariage est mis à jour (film, photos, mot de
+     passe), l'ancienne mémoire est ignorée et le mot de passe redemandé. */
+  function currentStamp(slug) {
+    const entry = (window.VAULT || {})[slug];
+    return entry ? entry.ct.slice(0, 32) : null;
+  }
+
   function remember(slug, payload) {
-    try { sessionStorage.setItem(PREFIX + slug, JSON.stringify(payload)); } catch (e) { /* ignore */ }
+    try {
+      sessionStorage.setItem(PREFIX + slug, JSON.stringify({ stamp: currentStamp(slug), payload: payload }));
+    } catch (e) { /* ignore */ }
   }
 
   function recall(slug) {
     try {
       const raw = sessionStorage.getItem(PREFIX + slug);
-      return raw ? JSON.parse(raw) : null;
+      if (!raw) return null;
+      const saved = JSON.parse(raw);
+      if (!saved || !saved.stamp || saved.stamp !== currentStamp(slug)) {
+        sessionStorage.removeItem(PREFIX + slug);
+        return null;
+      }
+      return saved.payload;
     } catch (e) {
       return null;
     }
