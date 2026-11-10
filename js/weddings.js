@@ -18,7 +18,8 @@ window.WEDDINGS = [
     names: ["Marine", "Clément"],
     date: "2026-05-09",
     dateLabel: "09 mai 2026",
-    cover: "assets/images/maries.jpg"
+    cover: "assets/images/maries.jpg",
+    titleImage: "assets/images/titre-mariage.png" /* optionnel : titre en image à la place des prénoms */
   },
   {
     slug: "lena-romain",

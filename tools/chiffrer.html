@@ -47,6 +47,9 @@
     <label for="dl">URL de téléchargement — vide si pas encore en ligne</label>
     <input id="dl" placeholder="https://...">
 
+    <label for="photos">Photos — une URL par ligne (vide si pas de photos)</label>
+    <textarea id="photos" placeholder="https://.../photo1.jpg&#10;https://.../photo2.jpg"></textarea>
+
     <button type="submit" id="go">Générer le bloc chiffré</button>
     <p class="err" id="err"></p>
   </form>
@@ -71,7 +74,11 @@
     $("go").disabled = true;
     try {
       const block = await WeddingCrypto.encrypt(
-        { videoUrl: $("video").value.trim(), downloadUrl: $("dl").value.trim() },
+        {
+          videoUrl: $("video").value.trim(),
+          downloadUrl: $("dl").value.trim(),
+          photos: $("photos").value.split(/\r?\n/).map((l) => l.trim()).filter(Boolean)
+        },
         $("pw").value.trim()
       );
       $("result").value = '  "' + $("slug").value.trim() + '": ' + JSON.stringify(block) + ",";

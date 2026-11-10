@@ -36,6 +36,21 @@ const DOWNLOAD_URL = (PRIVATE && PRIVATE.downloadUrl) || "";
   document.getElementById("heroName1").textContent = w.names[0];
   document.getElementById("heroName2").textContent = w.names[1];
 
+  if (w.titleImage) {
+    const title = document.querySelector(".hero__title");
+    title.classList.add("hero__title--img");
+    title.innerHTML = "";
+    const img = document.createElement("img");
+    img.src = w.titleImage;
+    img.alt = both;
+    img.className = "hero__title-img";
+    title.appendChild(img);
+  }
+
+  const q = "?m=" + encodeURIComponent(w.slug);
+  document.querySelector('[data-nav="film"]').href = "mariage.html" + q;
+  document.querySelector('[data-nav="photos"]').href = "galerie.html" + q;
+
   const heroDate = document.getElementById("heroDate");
   heroDate.dateTime = w.date;
   heroDate.textContent = w.dateLabel;

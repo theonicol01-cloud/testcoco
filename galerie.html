@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Les photos du mariage</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- Page commune à tous les mariages (galerie.html?m=<slug>).
+     La liste des photos vient du contenu déchiffré sur l'accueil. -->
+
+<main class="site" id="site" aria-hidden="true">
+
+  <a href="index.html" class="site-back" aria-label="Retour aux mariages">
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+      <path d="M19 12H5M11 6l-6 6 6 6" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <span class="site-back__text">Tous les mariages</span>
+  </a>
+
+  <nav class="site-nav">
+    <a href="#" class="site-nav__link" data-nav="film">Le film</a>
+    <a href="#" class="site-nav__link is-active" data-nav="photos">Photos</a>
+  </nav>
+
+  <header class="gallery-header">
+    <div class="gallery-header__media">
+      <img src="" alt="" class="gallery-header__image" id="headerImage" hidden>
+      <div class="gallery-header__overlay" aria-hidden="true"></div>
+    </div>
+    <div class="gallery-header__content">
+      <h1 class="gallery-header__title">Les photos</h1>
+      <time class="gallery-header__date" id="headerDate"></time>
+    </div>
+  </header>
+
+  <section class="gallery">
+    <div class="gallery__intro">
+      <p class="gallery__subheading">Quelques images de la journée, à consulter ou télécharger.</p>
+    </div>
+
+    <div class="gallery__grid" id="galleryGrid">
+      <!-- Vignettes injectées par js/galerie.js -->
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <p class="site-footer__names" id="footerNames"></p>
+    <p class="site-footer__line" id="footerLine"></p>
+  </footer>
+
+</main>
+
+<!-- LIGHTBOX (visionneuse plein écran) -->
+<div class="lightbox" id="lightbox" aria-hidden="true">
+  <button class="lightbox__close" id="lightboxClose" aria-label="Fermer">
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M6 6l12 12M18 6L6 18" stroke-linecap="round"/>
+    </svg>
+  </button>
+
+  <button class="lightbox__nav lightbox__prev" id="lightboxPrev" aria-label="Photo précédente">
+    <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.4">
+      <path d="M15 5l-7 7 7 7" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
+
+  <figure class="lightbox__figure">
+    <img src="" alt="" class="lightbox__image" id="lightboxImage">
+    <figcaption class="lightbox__counter" id="lightboxCounter"></figcaption>
+  </figure>
+
+  <button class="lightbox__nav lightbox__next" id="lightboxNext" aria-label="Photo suivante">
+    <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.4">
+      <path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
+</div>
+
+<script src="js/weddings.js"></script>
+<script src="js/crypto.js"></script>
+<script src="js/galerie.js"></script>
+</body>
+</html>
