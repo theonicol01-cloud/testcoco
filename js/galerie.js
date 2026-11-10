@@ -65,7 +65,7 @@
     item.dataset.index = String(index);
 
     const img = document.createElement("img");
-    img.src = photo.thumb;
+    window.WeddingCrypto.setImgWithFallback(img, photo.thumb);
     img.alt = photo.alt || "";
     img.loading = "lazy";
     img.className = "gallery__thumb";
@@ -126,7 +126,7 @@
 
   function updateLightbox() {
     const photo = PHOTOS[currentIndex];
-    lightboxImage.src = photo.full;
+    window.WeddingCrypto.setImgWithFallback(lightboxImage, photo.full);
     lightboxImage.alt = photo.alt || "";
     lightboxCounter.textContent = currentIndex + 1 + " / " + PHOTOS.length;
   }

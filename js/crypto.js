@@ -91,5 +91,35 @@ window.WeddingCrypto = (function () {
     }
   }
 
-  return { decrypt: decrypt, encrypt: encrypt, remember: remember, recall: recall };
+  /* Les noms de fichiers accentués (ex. « LÉNA ») peuvent être stockés
+     sur R2 sous deux formes Unicode selon l'ordinateur d'origine
+     (Windows vs Mac). Renvoie l'autre forme de l'URL, ou null. */
+  function altUrl(url) {
+    try {
+      const u = new URL(url);
+      const parts = u.pathname.split("/").map(function (seg) { return decodeURIComponent(seg); });
+      const joined = parts.join("/");
+      const target = joined === joined.normalize("NFC") ? "NFD" : "NFC";
+      const alt = parts.map(function (seg) { return encodeURIComponent(seg.normalize(target)); }).join("/");
+      if (alt === u.pathname) return null;
+      return u.origin + alt + u.search;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  /* Charge une image ; si elle échoue, réessaie avec l'autre forme d'URL. */
+  function setImgWithFallback(img, url) {
+    img.onerror = function () {
+      const alt = altUrl(url);
+      img.onerror = null;
+      if (alt) img.src = alt;
+    };
+    img.src = url;
+  }
+
+  return {
+    decrypt: decrypt, encrypt: encrypt, remember: remember, recall: recall,
+    altUrl: altUrl, setImgWithFallback: setImgWithFallback
+  };
 })();

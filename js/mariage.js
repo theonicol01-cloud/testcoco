@@ -114,6 +114,21 @@ const DOWNLOAD_URL = (PRIVATE && PRIVATE.downloadUrl) || "";
   const hasVideo = Boolean(VIDEO_URL);
 
   if (hasVideo) {
+    // Si le fichier ne se charge pas, on réessaie avec l'autre forme
+    // de l'URL (accents codés différemment selon l'ordinateur d'origine).
+    let triedAlt = false;
+    video.addEventListener("error", function () {
+      const alt = window.WeddingCrypto.altUrl(VIDEO_URL);
+      if (!triedAlt && alt) {
+        triedAlt = true;
+        video.src = alt;
+        video.load();
+      }
+    });
+    video.addEventListener("loadedmetadata", function () {
+      const btn = document.getElementById("downloadBtn");
+      if (DOWNLOAD_URL === VIDEO_URL) btn.href = video.currentSrc;
+    });
     video.src = VIDEO_URL;
     emptyState.hidden = true;
   } else {
