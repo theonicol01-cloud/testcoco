@@ -26,6 +26,7 @@ window.WEDDINGS = [
     names: ["Lena", "Romain"],
     date: "2026-05-16",
     dateLabel: "16 mai 2026",
-    cover: "assets/images/lena-romain.jpg" /* visuel provisoire — remplacer le fichier par une vraie photo (même nom) */
+    cover: "assets/images/lena-romain.jpg",
+    titleImage: "assets/images/titre-lena-romain.png"
   }
 ];
