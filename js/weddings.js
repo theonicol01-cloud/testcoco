@@ -23,7 +23,7 @@ window.WEDDINGS = [
   },
   {
     slug: "lena-romain",
-    names: ["Lena", "Romain"],
+    names: ["Léna", "Romain"],
     date: "2026-05-16",
     dateLabel: "16 mai 2026",
     cover: "assets/images/lena-romain.jpg",
